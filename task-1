@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Simple Quiz</h1>
+    <div id="quiz">
+      <p id="question">Question text</p>
+      <div class="options">
+        <button class="option-btn" onclick="selectOption(0)"></button>
+        <button class="option-btn" onclick="selectOption(1)"></button>
+        <button class="option-btn" onclick="selectOption(2)"></button>
+        <button class="option-btn" onclick="selectOption(3)"></button>
+      </div>
+      <button id="next-btn" onclick="nextQuestion()">Next</button>
+    </div>
+    <div id="result" class="hidden">
+      <h2>Your Score: <span id="score"></span></h2>
+      <button onclick="restartQuiz()">Restart Quiz</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .quiz-container {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    width: 300px;
+    text-align: center;
+  }
+  
+  .option-btn {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+  }
+  
+  .option-btn:hover {
+    background: #007bff;
+    color: white;
+  }
+  
+  #next-btn, #result button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #next-btn:hover, #result button:hover {
+    background: #218838;
+  }
+  
+  .hidden {
+    display: none;
+  }
+const questions = [
+    {
+      question: "What is the capital of France?",
+      options: ["Berlin", "London", "Paris", "Madrid"],
+      answer: 2
+    },
+    {
+      question: "Which language is used for web apps?",
+      options: ["Python", "Java", "PHP", "JavaScript"],
+      answer: 3
+    },
+    {
+      question: "HTML stands for?",
+      options: ["Hyper Trainer Marking Language", "Hyper Text Markup Language", "Hyper Text Marketing Language", "Hyper Text Markup Leveler"],
+      answer: 1
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Mars", "Jupiter", "Venus"],
+        answer: 1
+      },
+      {
+        question: "Who wrote 'Hamlet'?",
+        options: ["Charles Dickens", "William Shakespeare", "Mark Twain", "Jane Austen"],
+        answer: 1
+      },
+      {
+        question: "What is the smallest prime number?",
+        options: ["0", "1", "2", "3"],
+        answer: 2
+      }
+  ];
+  
+  let currentQuestion = 0;
+  let score = 0;
+  
+  function loadQuestion() {
+    const q = questions[currentQuestion];
+    document.getElementById("question").innerText = q.question;
+    const buttons = document.querySelectorAll(".option-btn");
+    buttons.forEach((btn, index) => {
+      btn.innerText = q.options[index];
+      btn.classList.remove("selected");
+    });
+  }
+  
+  function selectOption(index) {
+    const buttons = document.querySelectorAll(".option-btn");
+    buttons.forEach(btn => btn.classList.remove("selected"));
+    buttons[index].classList.add("selected");
+  }
+  
+  function nextQuestion() {
+    const selected = document.querySelector(".option-btn.selected");
+    if (!selected) {
+      alert("Please select an option!");
+      return;
+    }
+  
+    const selectedIndex = Array.from(document.querySelectorAll(".option-btn")).indexOf(selected);
+    if (selectedIndex === questions[currentQuestion].answer) {
+      score++;
+    }
+  
+    currentQuestion++;
+  
+    if (currentQuestion < questions.length) {
+      loadQuestion();
+    } else {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("score").innerText = `${score} / ${questions.length}`;
+    }
+  }
+  
+  function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    document.getElementById("result").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+    loadQuestion();
+  }
+  
+  // Initial load
+  loadQuestion();
